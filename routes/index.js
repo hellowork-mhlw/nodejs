@@ -7,4 +7,9 @@ router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views/index.html'));
 });
 
+// Serve the index.html file for the root route
+router.get('/run', (req, res) => {
+  res.send('GET request to the homepage');
+});
+
 module.exports = router;
