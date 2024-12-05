@@ -14,7 +14,7 @@ router.get('/run', (req, res) => {
 });
 
 // Pingコマンドを実行するエンドポイント
-app.get('/ping', (req, res) => {
+router.get('/ping', (req, res) => {
     const target = req.query.target;
 
     if (!target) {
