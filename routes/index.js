@@ -1,7 +1,15 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const { exec } = require('child_process');
 const router = express.Router();
+
+// CORSを有効にする
+router.use(cors({
+  origin: '*', // 許可するオリジン
+  methods: '*', // 許可するHTTPメソッド
+  allowedHeaders: '*' // 許可するヘッダー
+}));
 
 // Serve the index.html file for the root route
 router.get('/', (req, res) => {
