@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const { exec } = require('child_process');
+const ping = require('net-ping');
 const router = express.Router();
 
 // CORSを有効にする
@@ -23,22 +23,27 @@ router.get('/run', (req, res) => {
 
 // Pingコマンドを実行するエンドポイント
 router.get('/ping', (req, res) => {
-    const target = req.query.target;
+  const target = req.query.target;
 
-    if (!target) {
-        return res.status(400).send('Error: target query parameter is required.');
-    }
+  if (!target) {
+      return res.status(400).send('Error: target query parameter is required.');
+  }
 
-    // Pingコマンドを実行
-    exec(`ping -c 4 ${target}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error: ${stderr}`);
-            return res.status(500).send(`Ping command failed: ${stderr}`);
-        }
+  // Ping送信
+  session.pingHost(target, (error, target, sent, rcvd) => {
+      const time = rcvd - sent;
 
-        // コマンドの出力を返す
-        res.send(`<pre>${stdout}</pre>`);
-    });
+      if (error) {
+          if (error instanceof ping.RequestTimedOutError) {
+              res.status(408).send(`Ping to ${target} timed out.`);
+          } else {
+              res.status(500).send(`Ping to ${target} failed: ${error.message}`);
+          }
+      } else {
+          res.send(`Ping to ${target}: time=${time}ms`);
+      }
+  });
 });
+
 
 module.exports = router;
