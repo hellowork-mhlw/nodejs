@@ -21,9 +21,9 @@ router.get('/run', (req, res) => {
   res.send('GET request to the homepage');
 });
 
-const session = ping.createSession();
 // Pingコマンドを実行するエンドポイント
 router.get('/ping', (req, res) => {
+  const session = ping.createSession();
   const target = req.query.target;
 
   if (!target) {
